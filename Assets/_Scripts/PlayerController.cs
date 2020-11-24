@@ -1,4 +1,9 @@
-﻿using System.Collections;
+﻿#if UNITY_IOS || UNITY_ANDROID
+    #define USING_MOBILE
+#endif
+
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -28,8 +33,19 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+    // Directivas de Precompilado, se pueden seleccionar shaders para distintos dispositivos tambien
+    #if USING_MOBILE
+        float horizontal = Input.GetAxis("Mouse X");
+        float vertical = Input.GetAxis("Mouse Y");
+        if (Input.touchCount >0){
+            horizontal = Input.touches[0].deltaPosition.x;
+            vertical = Input.touches[0].deltaPosition.y;
+        }
+    #else
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
+    #endif
+        
         movement.Set(horizontal, 0, vertical);
         movement.Normalize();
 
